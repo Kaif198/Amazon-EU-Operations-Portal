@@ -8,6 +8,15 @@ import { STATIONS } from '../../data/stationData.js';
 export default function Navbar({ selectedStation, onStationChange, alertCount = 7 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [showStationDropdown, setShowStationDropdown] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      alert(`Search feature coming soon! You searched for: "${searchQuery}"`);
+      setSearchQuery('');
+    }
+  };
 
   const currentStation = selectedStation === 'all'
     ? 'All EU Stations'
@@ -60,35 +69,37 @@ export default function Navbar({ selectedStation, onStationChange, alertCount = 
           <option>Drivers</option>
           <option>Routes</option>
         </select>
-        <input
-          type="text"
-          placeholder="Search stations, drivers, routes..."
-          value={searchQuery}
-          onChange={e => setSearchQuery(e.target.value)}
-          style={{
-            flex: 1,
+        <form onSubmit={handleSearch} style={{ flex: 1, display: 'flex' }}>
+          <input
+            type="text"
+            placeholder="Search stations, drivers, routes..."
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            style={{
+              flex: 1,
+              height: '34px',
+              padding: '0 12px',
+              border: '1px solid #CCC',
+              borderLeft: 'none',
+              borderRight: 'none',
+              fontSize: '14px',
+              outline: 'none',
+              backgroundColor: '#FFF'
+            }}
+          />
+          <button type="submit" style={{
+            backgroundColor: '#FF9900',
+            border: '1px solid #FF9900',
+            borderRadius: '0 4px 4px 0',
             height: '34px',
-            padding: '0 12px',
-            border: '1px solid #CCC',
-            borderLeft: 'none',
-            borderRight: 'none',
-            fontSize: '14px',
-            outline: 'none',
-            backgroundColor: '#FFF'
-          }}
-        />
-        <button style={{
-          backgroundColor: '#FF9900',
-          border: '1px solid #FF9900',
-          borderRadius: '0 4px 4px 0',
-          height: '34px',
-          padding: '0 14px',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center'
-        }}>
-          <Search size={16} color="#131921" />
-        </button>
+            padding: '0 14px',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center'
+          }}>
+            <Search size={16} color="#131921" />
+          </button>
+        </form>
       </div>
 
       {/* Right side controls */}
@@ -174,24 +185,60 @@ export default function Navbar({ selectedStation, onStationChange, alertCount = 
         </div>
 
         {/* Notification bell */}
-        <div style={{ position: 'relative', cursor: 'pointer' }}>
-          <Bell size={20} color="#CCC" />
-          {alertCount > 0 && (
-            <span style={{
+        <div style={{ position: 'relative' }}>
+          <div style={{ cursor: 'pointer' }} onClick={() => setShowNotifications(!showNotifications)}>
+            <Bell size={20} color="#CCC" />
+            {alertCount > 0 && (
+              <span style={{
+                position: 'absolute',
+                top: '-6px',
+                right: '-6px',
+                backgroundColor: '#CC0C39',
+                color: '#FFF',
+                borderRadius: '50%',
+                width: '16px',
+                height: '16px',
+                fontSize: '10px',
+                fontWeight: 700,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>{alertCount}</span>
+            )}
+          </div>
+
+          {showNotifications && (
+            <div style={{
               position: 'absolute',
-              top: '-6px',
-              right: '-6px',
-              backgroundColor: '#CC0C39',
-              color: '#FFF',
-              borderRadius: '50%',
-              width: '16px',
-              height: '16px',
-              fontSize: '10px',
-              fontWeight: 700,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>{alertCount}</span>
+              top: '100%',
+              right: '-10px',
+              marginTop: '12px',
+              backgroundColor: '#FFF',
+              border: '1px solid #DDD',
+              borderRadius: '4px',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+              zIndex: 2000,
+              width: '300px',
+              maxHeight: '400px',
+              overflowY: 'auto'
+            }}>
+              <div style={{ padding: '12px 16px', borderBottom: '1px solid #E5E7EB', fontWeight: 700, fontSize: '14px', backgroundColor: '#F9FAFB' }}>
+                Notifications
+              </div>
+              {alertCount > 0 ? (
+                <div style={{ padding: '16px', borderBottom: '1px solid #E5E7EB', fontSize: '13px' }}>
+                  <div style={{ color: '#CC0C39', fontWeight: 600, marginBottom: '4px' }}>System Alert</div>
+                  <div style={{ color: '#565959' }}>You have {alertCount} critical anomalies detected in the network. Please review the Dashboard for details.</div>
+                </div>
+              ) : (
+                <div style={{ padding: '24px 16px', textAlign: 'center', color: '#6B7280', fontSize: '13px' }}>
+                  No new notifications.
+                </div>
+              )}
+              <div style={{ padding: '10px', textAlign: 'center', cursor: 'pointer', color: '#007185', fontSize: '13px', fontWeight: 500 }} onClick={() => setShowNotifications(false)}>
+                Mark all as read
+              </div>
+            </div>
           )}
         </div>
 
@@ -213,11 +260,11 @@ export default function Navbar({ selectedStation, onStationChange, alertCount = 
         </div>
       </div>
 
-      {/* Backdrop for dropdown */}
-      {showStationDropdown && (
+      {/* Backdrop for dropdowns */}
+      {(showStationDropdown || showNotifications) && (
         <div
           style={{ position: 'fixed', inset: 0, zIndex: 1999 }}
-          onClick={() => setShowStationDropdown(false)}
+          onClick={() => { setShowStationDropdown(false); setShowNotifications(false); }}
         />
       )}
     </nav>
