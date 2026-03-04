@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, Bell, ChevronDown } from 'lucide-react';
 import { STATIONS } from '../../data/stationData.js';
 
@@ -9,12 +10,23 @@ export default function Navbar({ selectedStation, onStationChange, alertCount = 
   const [searchQuery, setSearchQuery] = useState('');
   const [showStationDropdown, setShowStationDropdown] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const navigate = useNavigate();
 
   const handleSearch = (e) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      alert(`Search feature coming soon! You searched for: "${searchQuery}"`);
+    if (!searchQuery.trim()) return;
+
+    const query = searchQuery.toLowerCase().trim();
+    const match = STATIONS.find(s =>
+      s.name.toLowerCase().includes(query) ||
+      s.code.toLowerCase().includes(query)
+    );
+
+    if (match) {
+      navigate(`/stations?id=${match.id}`);
       setSearchQuery('');
+    } else {
+      alert(`No matching station found for "${searchQuery}".`);
     }
   };
 
