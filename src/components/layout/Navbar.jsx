@@ -69,7 +69,7 @@ export default function Navbar({ selectedStation, onStationChange, alertCount = 
           <option>Drivers</option>
           <option>Routes</option>
         </select>
-        <form onSubmit={handleSearch} style={{ flex: 1, display: 'flex' }}>
+        <form onSubmit={handleSearch} style={{ flex: 1, display: 'flex', position: 'relative', zIndex: 2001 }}>
           <input
             type="text"
             placeholder="Search stations, drivers, routes..."
@@ -185,7 +185,7 @@ export default function Navbar({ selectedStation, onStationChange, alertCount = 
         </div>
 
         {/* Notification bell */}
-        <div style={{ position: 'relative' }}>
+        <div style={{ position: 'relative', zIndex: 2001 }}>
           <div style={{ cursor: 'pointer' }} onClick={() => setShowNotifications(!showNotifications)}>
             <Bell size={20} color="#CCC" />
             {alertCount > 0 && (
@@ -217,7 +217,7 @@ export default function Navbar({ selectedStation, onStationChange, alertCount = 
               border: '1px solid #DDD',
               borderRadius: '4px',
               boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-              zIndex: 2000,
+              zIndex: 2002,
               width: '300px',
               maxHeight: '400px',
               overflowY: 'auto'
@@ -263,7 +263,7 @@ export default function Navbar({ selectedStation, onStationChange, alertCount = 
       {/* Backdrop for dropdowns */}
       {(showStationDropdown || showNotifications) && (
         <div
-          style={{ position: 'fixed', inset: 0, zIndex: 1999 }}
+          style={{ position: 'fixed', inset: 0, zIndex: 1999, backgroundColor: 'transparent' }}
           onClick={() => { setShowStationDropdown(false); setShowNotifications(false); }}
         />
       )}
