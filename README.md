@@ -1,6 +1,7 @@
 # Amazon EU Operations Portal
 
 This is a frontend dashboard built to monitor and analyze Amazon's EU delivery network (AMZL). I put this together to act as a central hub for operations data—tracking everything from daily package volumes and on-time delivery rates to station health and capacity planning.
+Live Demo:  https://amazon-eu-operations-portal-git-main-kaif-ahmeds-projects.vercel.app/
 
 ## What's Inside?
 
